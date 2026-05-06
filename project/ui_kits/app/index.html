@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <title>Longo Passeio — UI Kit</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet" />
+
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; background: #1a1410; font-family: 'DM Sans', sans-serif; }
+    #root { height: 100%; display: flex; align-items: center; justify-content: center; padding: 20px; }
+    button { font-family: inherit; }
+    ::-webkit-scrollbar { width: 0; }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <!-- Data -->
+  <script src="data/cafes.js"></script>
+
+  <!-- Icons (shared) -->
+  <script type="text/babel" src="icons-from-source.jsx"></script>
+
+  <!-- Recently-updated badge helper (depends on nothing) -->
+  <script type="text/babel" src="recently-updated.jsx"></script>
+
+  <!-- Components -->
+  <script type="text/babel" src="tweaks-panel.jsx"></script>
+  <script type="text/babel" src="CafeCard.jsx"></script>
+  <script type="text/babel" src="CitySelector.jsx"></script>
+  <script type="text/babel" src="HomeScreen.jsx"></script>
+  <script type="text/babel" src="ExplorarScreen.jsx"></script>
+  <script type="text/babel" src="RoteirosScreen.jsx"></script>
+  <script type="text/babel" src="FavoritosScreen.jsx"></script>
+
+  <script type="text/babel">
+    const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+      "accentColor": "#c8a84a",
+      "bgTone": "cream",
+      "mapStyle": "ilustrado",
+      "showVibe": true,
+      "recentVariant": "estrela"
+    }/*EDITMODE-END*/;
+
+    function BottomNav({ active, onNavigate, favCount }) {
+      const tabs = [
+        { id: "home",     label: "Início",    icon: HomeIcon },
+        { id: "explorar", label: "Explorar",  icon: MapIcon },
+        { id: "roteiros", label: "Roteiros",  icon: RouteIcon },
+        { id: "favoritos",label: "Favoritos", icon: HeartIcon },
+      ];
+      return (
+        <div style={navStyles.bar}>
+          {tabs.map(tab => {
+            const isActive = active === tab.id;
+            return (
+              <button
+                key={tab.id}
+                style={{ ...navStyles.tab, color: isActive ? "#2a1f14" : "#bbb" }}
+                onClick={() => onNavigate(tab.id)}
+              >
+                <tab.icon active={isActive} />
+                <span style={{ ...navStyles.tabLabel, fontWeight: isActive ? 600 : 400 }}>
+                  {tab.label}
+                  {tab.id === "favoritos" && favCount > 0 && (
+                    <span style={navStyles.badge}>{favCount}</span>
+                  )}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+      );
+    }
+
+    const navStyles = {
+      bar: {
+        position: "absolute", bottom: 0, left: 0, right: 0,
+        height: 72, background: "rgba(250,247,242,0.96)",
+        backdropFilter: "blur(12px)",
+        borderTop: "1px solid #ece8e0",
+        display: "flex", alignItems: "stretch",
+        paddingBottom: 8,
+        zIndex: 50,
+      },
+      tab: {
+        flex: 1, display: "flex", flexDirection: "column",
+        alignItems: "center", justifyContent: "center",
+        background: "none", border: "none", cursor: "pointer",
+        gap: 2, padding: "8px 0 0",
+        transition: "color 0.15s ease",
+      },
+      tabLabel: {
+        fontFamily: "'DM Sans', sans-serif", fontSize: 10,
+        letterSpacing: "0.03em", position: "relative",
+      },
+      badge: {
+        position: "absolute", top: -6, right: -10,
+        background: "#e05a5a", color: "#fff",
+        fontSize: 9, fontWeight: 700, borderRadius: 10,
+        width: 16, height: 16, display: "inline-flex",
+        alignItems: "center", justifyContent: "center",
+      },
+    };
+
+    function App() {
+      const [screen, setScreen] = React.useState("home");
+      const [navParams, setNavParams] = React.useState({});
+      const [openCafe, setOpenCafe] = React.useState(null);
+      const [favorites, setFavorites] = React.useState(() => {
+        try { return JSON.parse(localStorage.getItem("sp_favoritos") || "[]"); }
+        catch { return []; }
+      });
+      const [tweaks, setTweaks] = React.useState(TWEAK_DEFAULTS);
+      const [tweaksVisible, setTweaksVisible] = React.useState(false);
+      const [activeCityId, setActiveCityId] = React.useState("sp-centro");
+      const [citySheetOpen, setCitySheetOpen] = React.useState(false);
+
+      React.useEffect(() => {
+        const handler = (e) => {
+          if (e.data?.type === "__activate_edit_mode") setTweaksVisible(true);
+          if (e.data?.type === "__deactivate_edit_mode") setTweaksVisible(false);
+        };
+        window.addEventListener("message", handler);
+        window.parent.postMessage({ type: "__edit_mode_available" }, "*");
+        return () => window.removeEventListener("message", handler);
+      }, []);
+
+      const persistFavs = (newFavs) => {
+        setFavorites(newFavs);
+        try { localStorage.setItem("sp_favoritos", JSON.stringify(newFavs)); } catch {}
+      };
+      const toggleFavorite = (id) => {
+        const next = favorites.includes(id)
+          ? favorites.filter(f => f !== id)
+          : [...favorites, id];
+        persistFavs(next);
+      };
+      const navigate = (tab, params = {}) => {
+        setScreen(tab);
+        setNavParams(params);
+        setOpenCafe(null);
+      };
+
+      const bgTones = { cream: "#faf7f2", warm: "#f7f0e8", cool: "#f0f4f7" };
+      const appBg = bgTones[tweaks.bgTone] || bgTones.cream;
+
+      return (
+        <div data-screen-label={`Longo Passeio — ${screen}`} style={{
+          width: 390, height: 844, background: appBg,
+          borderRadius: 44, overflow: "hidden", position: "relative",
+          display: "flex", flexDirection: "column",
+          boxShadow: "0 32px 80px rgba(0,0,0,0.5), 0 0 0 12px #111, 0 0 0 14px #333",
+        }}>
+          <div style={{
+            height: 44, background: appBg, display: "flex",
+            alignItems: "center", justifyContent: "space-between",
+            padding: "0 28px", flexShrink: 0,
+          }}>
+            <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 600, color: "#2a1f14" }}>
+              9:41
+            </span>
+            <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
+              <svg width="16" height="12" viewBox="0 0 16 12" fill="#2a1f14">
+                <rect x="0" y="6" width="3" height="6" rx="1"/><rect x="4.5" y="4" width="3" height="8" rx="1"/>
+                <rect x="9" y="2" width="3" height="10" rx="1"/><rect x="13.5" y="0" width="2.5" height="12" rx="1"/>
+              </svg>
+              <svg width="15" height="12" viewBox="0 0 15 12" fill="#2a1f14">
+                <path d="M7.5 2.5C9.8 2.5 11.8 3.5 13.2 5.1L14.5 3.6C12.7 1.7 10.2.5 7.5.5S2.3 1.7.5 3.6L1.8 5.1C3.2 3.5 5.2 2.5 7.5 2.5Z"/>
+                <path d="M7.5 5.5C9 5.5 10.3 6.1 11.3 7.1L12.6 5.6C11.2 4.2 9.4 3.5 7.5 3.5S3.8 4.2 2.4 5.6L3.7 7.1C4.7 6.1 6 5.5 7.5 5.5Z"/>
+                <circle cx="7.5" cy="10" r="1.5"/>
+              </svg>
+              <svg width="25" height="12" viewBox="0 0 25 12" fill="none">
+                <rect x="0.5" y="0.5" width="21" height="11" rx="3.5" stroke="#2a1f14" strokeOpacity="0.35"/>
+                <rect x="1.5" y="1.5" width="17" height="9" rx="2.5" fill="#2a1f14"/>
+                <path d="M23 4v4a2 2 0 0 0 0-4Z" fill="#2a1f14" fillOpacity="0.4"/>
+              </svg>
+            </div>
+          </div>
+
+          <div style={{ flex: 1, overflow: "hidden", display: "flex", flexDirection: "column", position: "relative" }}>
+            {screen === "home" && <HomeScreen onNavigate={navigate} onOpenCafe={setOpenCafe} activeCityId={activeCityId} onChangeCity={setActiveCityId} onOpenCitySheet={() => setCitySheetOpen(true)} />}
+            {screen === "explorar" && (
+              <ExplorarScreen
+                onOpenCafe={setOpenCafe}
+                favorites={favorites}
+                initialBairro={navParams.bairro || null}
+                recentVariant={tweaks.recentVariant}
+              />
+            )}
+            {screen === "roteiros" && <RoteirosScreen onOpenCafe={setOpenCafe} />}
+            {screen === "favoritos" && (
+              <FavoritosScreen
+                favorites={favorites}
+                onOpenCafe={setOpenCafe}
+                onToggleFavorite={toggleFavorite}
+              />
+            )}
+            {openCafe && (
+              <CafeCard
+                cafe={openCafe}
+                onClose={() => setOpenCafe(null)}
+                onToggleFavorite={toggleFavorite}
+                isFavorite={favorites.includes(openCafe.id)}
+                recentVariant={tweaks.recentVariant}
+              />
+            )}
+          </div>
+
+          <BottomNav active={screen} onNavigate={navigate} favCount={favorites.length} />
+
+          {citySheetOpen && (
+            <CitySheet
+              cities={CITIES}
+              activeId={activeCityId}
+              onSelect={(id) => { setActiveCityId(id); setCitySheetOpen(false); }}
+              onClose={() => setCitySheetOpen(false)}
+            />
+          )}
+
+          {tweaksVisible && (
+            <TweaksPanel
+              onClose={() => {
+                setTweaksVisible(false);
+                window.parent.postMessage({ type: "__edit_mode_dismissed" }, "*");
+              }}
+            >
+              <TweakSection title="Visual">
+                <TweakColor
+                  label="Cor de destaque"
+                  value={tweaks.accentColor}
+                  onChange={v => {
+                    setTweaks(p => ({ ...p, accentColor: v }));
+                    window.parent.postMessage({ type: "__edit_mode_set_keys", edits: { accentColor: v } }, "*");
+                  }}
+                />
+                <TweakRadio
+                  label="Fundo"
+                  value={tweaks.bgTone}
+                  options={[
+                    { value: "cream", label: "Creme" },
+                    { value: "warm", label: "Quente" },
+                    { value: "cool", label: "Frio" },
+                  ]}
+                  onChange={v => {
+                    setTweaks(p => ({ ...p, bgTone: v }));
+                    window.parent.postMessage({ type: "__edit_mode_set_keys", edits: { bgTone: v } }, "*");
+                  }}
+                />
+              </TweakSection>
+              <TweakSection title="Conteúdo">
+                <TweakToggle
+                  label="Mostrar vibe do café"
+                  value={tweaks.showVibe}
+                  onChange={v => {
+                    setTweaks(p => ({ ...p, showVibe: v }));
+                    window.parent.postMessage({ type: "__edit_mode_set_keys", edits: { showVibe: v } }, "*");
+                  }}
+                />
+                <TweakRadio
+                  label="Selo de atualização recente"
+                  value={tweaks.recentVariant}
+                  options={[
+                    { value: "broto", label: "Broto 🌱" },
+                    { value: "estrela", label: "Estrela ✦" },
+                  ]}
+                  onChange={v => {
+                    setTweaks(p => ({ ...p, recentVariant: v }));
+                    window.parent.postMessage({ type: "__edit_mode_set_keys", edits: { recentVariant: v } }, "*");
+                  }}
+                />
+              </TweakSection>
+            </TweaksPanel>
+          )}
+        </div>
+      );
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById("root"));
+    root.render(<App />);
+  </script>
+</body>
+</html>

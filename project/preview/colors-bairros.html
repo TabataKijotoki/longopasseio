@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600&display=swap" rel="stylesheet"/>
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  body{background:#faf7f2;font-family:'DM Sans',sans-serif;padding:20px}
+  .grid{display:grid;grid-template-columns:repeat(6,1fr);gap:8px}
+  .b{border-radius:14px;overflow:hidden;border:1.5px solid rgba(0,0,0,0.05)}
+  .top{height:54px;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:13px;letter-spacing:0.02em}
+  .bot{height:30px;display:flex;align-items:center;justify-content:center;font-size:9px;color:#3a2e24;background:#fff}
+  .hex{font-size:9px;letter-spacing:0.04em;opacity:0.8;margin-top:2px}
+  .strip{display:flex;height:8px;margin-top:14px;border-radius:4px;overflow:hidden}
+  .strip > div{flex:1}
+  .label{font-size:10px;text-transform:uppercase;letter-spacing:0.12em;color:#aaa;margin-top:18px;text-align:center}
+</style></head>
+<body>
+  <div class="grid">
+    <div class="b"><div class="top" style="background:#c8d8b0;color:#4a6a30">Santa Cecília</div><div class="bot">#c8d8b0</div></div>
+    <div class="b"><div class="top" style="background:#f2c4c4;color:#8a3a3a">Vila Buarque</div><div class="bot">#f2c4c4</div></div>
+    <div class="b"><div class="top" style="background:#b8d4c8;color:#2a5a48">Higienópolis</div><div class="bot">#b8d4c8</div></div>
+    <div class="b"><div class="top" style="background:#e8d8b0;color:#7a5a20">República</div><div class="bot">#e8d8b0</div></div>
+    <div class="b"><div class="top" style="background:#b8d4b8;color:#2a5a30">Barra Funda</div><div class="bot">#b8d4b8</div></div>
+    <div class="b"><div class="top" style="background:#d0c4e8;color:#5a4a8a">C. Elíseos</div><div class="bot">#d0c4e8</div></div>
+  </div>
+  <div class="strip">
+    <div style="background:#c8d8b0"></div><div style="background:#f2c4c4"></div><div style="background:#b8d4c8"></div>
+    <div style="background:#e8d8b0"></div><div style="background:#b8d4b8"></div><div style="background:#d0c4e8"></div>
+  </div>
+  <p class="label">the 6-stripe "neighborhood passport" used atop the home hero card</p>
+</body></html>

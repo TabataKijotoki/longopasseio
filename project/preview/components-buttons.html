@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  body{background:#faf7f2;font-family:'DM Sans',sans-serif;padding:24px;display:flex;flex-direction:column;gap:16px}
+  .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+  .label{font-size:10px;text-transform:uppercase;letter-spacing:0.12em;color:#aaa;width:78px;flex-shrink:0}
+  /* primary CTA — espresso fill */
+  .cta-primary{display:inline-flex;align-items:center;gap:14px;background:#2a1f14;color:#faf7f2;padding:10px 14px;border-radius:10px;font-size:13px;font-weight:600;letter-spacing:0.04em;border:none;cursor:pointer}
+  /* chip inactive */
+  .chip{font-size:12px;padding:7px 14px;border-radius:20px;letter-spacing:0.03em;cursor:pointer;border:1.5px solid #ddd;background:transparent;color:#888;font-weight:400}
+  .chip.active{background:#2a1f14;color:#faf7f2;border-color:#2a1f14;font-weight:600}
+  /* bairro chip */
+  .bairro{font-size:12px;font-weight:600;border:none;border-radius:20px;padding:7px 14px;letter-spacing:0.03em;cursor:pointer}
+  /* link button */
+  .link{background:none;border:none;font-size:12px;color:#9a8878;cursor:pointer}
+</style></head>
+<body>
+  <div class="row">
+    <span class="label">Primary</span>
+    <button class="cta-primary">explorar cafés <span style="font-size:18px">→</span></button>
+    <button class="cta-primary" style="padding:8px 14px;font-size:12px">fechar ×</button>
+  </div>
+  <div class="row">
+    <span class="label">Filter chip</span>
+    <button class="chip">todos</button>
+    <button class="chip active">trabalhar</button>
+    <button class="chip">leitura</button>
+    <button class="chip">pet friendly</button>
+  </div>
+  <div class="row">
+    <span class="label">Bairro</span>
+    <button class="bairro" style="background:#c8d8b0;color:#4a6a30">Santa Cecília</button>
+    <button class="bairro" style="background:#f2c4c4;color:#8a3a3a">Vila Buarque</button>
+    <button class="bairro" style="background:#e8d8b0;color:#7a5a20">República</button>
+    <button class="link">ver roteiros →</button>
+  </div>
+</body></html>

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  body{background:#faf7f2;font-family:'DM Sans',sans-serif;padding:24px;color:#2a1f14}
+  .grid{display:grid;grid-template-columns:repeat(6,1fr);gap:10px}
+  .swatch{display:flex;flex-direction:column;border:1.5px solid #e8e0d4;border-radius:10px;overflow:hidden;background:#fff}
+  .chip{height:64px}
+  .label{padding:6px 8px;font-size:10px;color:#3a2e24;display:flex;flex-direction:column;gap:1px}
+  .name{font-weight:600;letter-spacing:0.02em}
+  .hex{color:#9a8878;font-size:9px;letter-spacing:0.04em}
+</style></head>
+<body>
+  <div class="grid">
+    <div class="swatch"><div class="chip" style="background:#faf7f2;border-bottom:1px solid #f0ebe3"></div><div class="label"><span class="name">cream</span><span class="hex">#faf7f2</span></div></div>
+    <div class="swatch"><div class="chip" style="background:#f7f0e8"></div><div class="label"><span class="name">warm</span><span class="hex">#f7f0e8</span></div></div>
+    <div class="swatch"><div class="chip" style="background:#f5f0e8"></div><div class="label"><span class="name">paper</span><span class="hex">#f5f0e8</span></div></div>
+    <div class="swatch"><div class="chip" style="background:#f0ebe3"></div><div class="label"><span class="name">input</span><span class="hex">#f0ebe3</span></div></div>
+    <div class="swatch"><div class="chip" style="background:#fff;border-bottom:1px solid #f0ebe3"></div><div class="label"><span class="name">card</span><span class="hex">#ffffff</span></div></div>
+    <div class="swatch"><div class="chip" style="background:#2a1f14"></div><div class="label"><span class="name">espresso</span><span class="hex">#2a1f14</span></div></div>
+  </div>
+</body></html>
