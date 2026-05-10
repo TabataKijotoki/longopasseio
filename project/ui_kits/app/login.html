@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <title>Longo Passeio — Entrar</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      height: 100%;
+      background: #1a1410;
+      font-family: 'DM Sans', sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    button { font-family: inherit; }
+    ::-webkit-scrollbar { width: 0; }
+    input { font-family: inherit; }
+
+    .phone {
+      width: 390px;
+      height: 844px;
+      background: #faf7f2;
+      border-radius: 44px;
+      overflow: hidden;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 32px 80px rgba(0,0,0,0.5), 0 0 0 12px #111, 0 0 0 14px #333;
+    }
+
+    /* Status bar */
+    .status-bar {
+      height: 44px;
+      background: #faf7f2;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 28px;
+      flex-shrink: 0;
+    }
+    .status-time {
+      font-size: 13px;
+      font-weight: 600;
+      color: #2a1f14;
+    }
+    .status-icons { display: flex; align-items: center; gap: 5px; }
+
+    /* Scrollable content */
+    .content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px 24px 40px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Logo area */
+    .logo-area { margin-bottom: 32px; }
+    .curadoria {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #aaa;
+      margin-bottom: 4px;
+    }
+    .logo {
+      font-family: 'DM Serif Display', serif;
+      font-size: 32px;
+      color: #2a1f14;
+      line-height: 1.1;
+      margin-bottom: 6px;
+    }
+    .logo em { font-style: italic; }
+    .tagline {
+      font-family: 'DM Serif Display', serif;
+      font-size: 15px;
+      color: #9a8878;
+      line-height: 1.3;
+    }
+    .tagline em { font-style: italic; color: #7a6858; }
+
+    /* Form */
+    .form { display: flex; flex-direction: column; gap: 14px; }
+
+    .field { display: flex; flex-direction: column; gap: 6px; }
+    .field-label {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #aaa;
+    }
+    .input-wrap { position: relative; }
+    .input {
+      width: 100%;
+      padding: 13px 16px;
+      background: #f0ebe3;
+      border: 1.5px solid #e8e0d4;
+      border-radius: 12px;
+      font-size: 14px;
+      color: #2a1f14;
+      outline: none;
+      transition: border-color 0.15s ease;
+    }
+    .input::placeholder { color: #bbb; }
+    .input:focus { border-color: #b8a898; }
+    .input.error { border-color: #e05a5a; background: #fdf5f5; }
+    .input.success { border-color: #b8d4b8; }
+    .input-pw { padding-right: 46px; }
+
+    .toggle-pw {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #bbb;
+      padding: 4px;
+      font-size: 13px;
+      line-height: 1;
+      transition: color 0.15s;
+    }
+    .toggle-pw:hover { color: #7a6858; }
+
+    /* Password requirements */
+    .pw-reqs {
+      display: none;
+      flex-direction: column;
+      gap: 4px;
+      padding: 10px 12px;
+      background: #f5f0e8;
+      border-radius: 10px;
+      border: 1px solid #e8e0d4;
+    }
+    .pw-reqs.visible { display: flex; }
+    .req {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 11px;
+      color: #b8a898;
+      transition: color 0.15s;
+    }
+    .req.met { color: #4a6a30; }
+    .req-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #d8cfc2;
+      flex-shrink: 0;
+      transition: background 0.15s;
+    }
+    .req.met .req-dot { background: #4a6a30; }
+
+    /* Error message */
+    .error-msg {
+      display: none;
+      font-size: 12px;
+      color: #c04040;
+      background: #fdf5f5;
+      border: 1px solid #f2c4c4;
+      border-radius: 10px;
+      padding: 10px 12px;
+      line-height: 1.4;
+    }
+    .error-msg.visible { display: block; }
+
+    /* Submit */
+    .btn-submit {
+      width: 100%;
+      padding: 14px;
+      background: #2a1f14;
+      color: #faf7f2;
+      border: none;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+      transition: opacity 0.15s;
+      margin-top: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 50px;
+    }
+    .btn-submit:disabled { opacity: 0.45; cursor: default; }
+    .btn-submit:not(:disabled):hover { opacity: 0.88; }
+
+    /* Spinner */
+    .spinner {
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(250,247,242,0.3);
+      border-top-color: #faf7f2;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      display: none;
+    }
+    .btn-submit.loading .spinner { display: block; }
+    .btn-submit.loading .btn-label { display: none; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Success state */
+    .success-overlay {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      flex: 1;
+      gap: 12px;
+    }
+    .success-overlay.visible { display: flex; }
+    .success-icon {
+      width: 56px;
+      height: 56px;
+      background: #e8f0dc;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      margin-bottom: 4px;
+    }
+    .success-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: 22px;
+      color: #2a1f14;
+    }
+    .success-sub {
+      font-size: 13px;
+      color: #9a8878;
+      line-height: 1.5;
+    }
+
+    /* Divider / footer */
+    .form-footer {
+      margin-top: 20px;
+      text-align: center;
+    }
+    .form-footer p {
+      font-size: 12px;
+      color: #b8a898;
+      line-height: 1.5;
+    }
+    .form-footer strong {
+      color: #7a6858;
+      font-weight: 600;
+    }
+
+    /* Dica strip at bottom */
+    .dica {
+      margin-top: auto;
+      padding-top: 24px;
+      display: flex;
+      gap: 8px;
+      align-items: flex-start;
+    }
+    .dica-star { font-size: 13px; color: #c8a84a; flex-shrink: 0; margin-top: 1px; }
+    .dica-text {
+      font-size: 11px;
+      color: #b8a898;
+      line-height: 1.5;
+      font-style: italic;
+    }
+  </style>
+</head>
+<body>
+  <div class="phone">
+
+    <!-- Status bar -->
+    <div class="status-bar">
+      <span class="status-time">9:41</span>
+      <div class="status-icons">
+        <svg width="16" height="12" viewBox="0 0 16 12" fill="#2a1f14">
+          <rect x="0" y="6" width="3" height="6" rx="1"/><rect x="4.5" y="4" width="3" height="8" rx="1"/>
+          <rect x="9" y="2" width="3" height="10" rx="1"/><rect x="13.5" y="0" width="2.5" height="12" rx="1"/>
+        </svg>
+        <svg width="15" height="12" viewBox="0 0 15 12" fill="#2a1f14">
+          <path d="M7.5 2.5C9.8 2.5 11.8 3.5 13.2 5.1L14.5 3.6C12.7 1.7 10.2.5 7.5.5S2.3 1.7.5 3.6L1.8 5.1C3.2 3.5 5.2 2.5 7.5 2.5Z"/>
+          <path d="M7.5 5.5C9 5.5 10.3 6.1 11.3 7.1L12.6 5.6C11.2 4.2 9.4 3.5 7.5 3.5S3.8 4.2 2.4 5.6L3.7 7.1C4.7 6.1 6 5.5 7.5 5.5Z"/>
+          <circle cx="7.5" cy="10" r="1.5"/>
+        </svg>
+        <svg width="25" height="12" viewBox="0 0 25 12" fill="none">
+          <rect x="0.5" y="0.5" width="21" height="11" rx="3.5" stroke="#2a1f14" stroke-opacity="0.35"/>
+          <rect x="1.5" y="1.5" width="17" height="9" rx="2.5" fill="#2a1f14"/>
+          <path d="M23 4v4a2 2 0 0 0 0-4Z" fill="#2a1f14" fill-opacity="0.4"/>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Content -->
+    <div class="content" id="mainContent">
+
+      <!-- Logo -->
+      <div class="logo-area">
+        <p class="curadoria">curadoria por Tabata Kijotoki</p>
+        <h1 class="logo">Longo <em>Passeio</em></h1>
+        <p class="tagline"><em>...o mundo além</em> do seu quintal</p>
+      </div>
+
+      <!-- Form -->
+      <div class="form" id="loginForm">
+
+        <div class="field">
+          <label class="field-label" for="email">e-mail</label>
+          <div class="input-wrap">
+            <input
+              class="input"
+              type="email"
+              id="email"
+              placeholder="seu@email.com"
+              autocomplete="email"
+              inputmode="email"
+            />
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="field-label" for="password">senha</label>
+          <div class="input-wrap">
+            <input
+              class="input input-pw"
+              type="password"
+              id="password"
+              placeholder="mín. 6 caracteres"
+              autocomplete="current-password"
+            />
+            <button class="toggle-pw" type="button" id="togglePw" aria-label="mostrar senha">
+              <svg id="eyeIcon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                <circle cx="12" cy="12" r="3"/>
+              </svg>
+            </button>
+          </div>
+          <!-- Requirements -->
+          <div class="pw-reqs" id="pwReqs">
+            <div class="req" id="req-len">
+              <div class="req-dot"></div>
+              <span>6 ou mais caracteres</span>
+            </div>
+            <div class="req" id="req-letter">
+              <div class="req-dot"></div>
+              <span>ao menos uma letra</span>
+            </div>
+            <div class="req" id="req-number">
+              <div class="req-dot"></div>
+              <span>ao menos um número</span>
+            </div>
+            <div class="req" id="req-special">
+              <div class="req-dot"></div>
+              <span>ao menos um caractere especial</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Error -->
+        <div class="error-msg" id="errorMsg"></div>
+
+        <button class="btn-submit" id="btnSubmit" type="button" disabled>
+          <div class="spinner"></div>
+          <span class="btn-label">entrar</span>
+        </button>
+
+        <div class="form-footer">
+          <p>senha: <strong>letras + números + especial</strong></p>
+        </div>
+
+      </div>
+
+      <!-- Success -->
+      <div class="success-overlay" id="successOverlay">
+        <div class="success-icon">✦</div>
+        <h2 class="success-title">bem-vindo de volta</h2>
+        <p class="success-sub">abrindo o app…</p>
+      </div>
+
+      <!-- Bottom hint -->
+      <div class="dica">
+        <span class="dica-star">★</span>
+        <span class="dica-text">vá sem pressa, peça um bom café e se perca (só um pouquinho).</span>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    const API = 'http://localhost:3001/api';
+
+    const emailEl    = document.getElementById('email');
+    const passwordEl = document.getElementById('password');
+    const togglePw   = document.getElementById('togglePw');
+    const eyeIcon    = document.getElementById('eyeIcon');
+    const pwReqs     = document.getElementById('pwReqs');
+    const btnSubmit  = document.getElementById('btnSubmit');
+    const errorMsg   = document.getElementById('errorMsg');
+    const loginForm  = document.getElementById('loginForm');
+    const successOverlay = document.getElementById('successOverlay');
+
+    // ── Password toggle ─────────────────────────────────────────────
+    const eyeOpen = `<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>`;
+    const eyeOff  = `<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/>`;
+
+    togglePw.addEventListener('click', () => {
+      const isHidden = passwordEl.type === 'password';
+      passwordEl.type = isHidden ? 'text' : 'password';
+      eyeIcon.innerHTML = isHidden ? eyeOff : eyeOpen;
+    });
+
+    // ── Password validation ─────────────────────────────────────────
+    function checkPassword(pwd) {
+      return {
+        len:     pwd.length >= 6,
+        letter:  /[a-zA-Z]/.test(pwd),
+        number:  /\d/.test(pwd),
+        special: /[^a-zA-Z\d]/.test(pwd),
+      };
+    }
+
+    function updateReqs(pwd) {
+      if (!pwd) { pwReqs.classList.remove('visible'); return; }
+      pwReqs.classList.add('visible');
+      const c = checkPassword(pwd);
+      document.getElementById('req-len').classList.toggle('met', c.len);
+      document.getElementById('req-letter').classList.toggle('met', c.letter);
+      document.getElementById('req-number').classList.toggle('met', c.number);
+      document.getElementById('req-special').classList.toggle('met', c.special);
+    }
+
+    function isValid() {
+      const email = emailEl.value.trim();
+      const pwd   = passwordEl.value;
+      const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+      const c = checkPassword(pwd);
+      return emailOk && c.len && c.letter && c.number && c.special;
+    }
+
+    function syncButton() {
+      btnSubmit.disabled = !isValid();
+    }
+
+    function showError(msg) {
+      errorMsg.textContent = msg;
+      errorMsg.classList.add('visible');
+    }
+
+    function clearError() {
+      errorMsg.classList.remove('visible');
+    }
+
+    passwordEl.addEventListener('input', () => {
+      updateReqs(passwordEl.value);
+      clearError();
+      passwordEl.classList.remove('error');
+      syncButton();
+    });
+
+    emailEl.addEventListener('input', () => {
+      clearError();
+      emailEl.classList.remove('error');
+      syncButton();
+    });
+
+    // ── Submit ──────────────────────────────────────────────────────
+    btnSubmit.addEventListener('click', async () => {
+      if (!isValid()) return;
+      clearError();
+      btnSubmit.classList.add('loading');
+      btnSubmit.disabled = true;
+
+      try {
+        const res = await fetch(`${API}/auth/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email: emailEl.value.trim(),
+            password: passwordEl.value,
+          }),
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+          showError(data.error || 'erro ao entrar. tente novamente.');
+          emailEl.classList.add('error');
+          passwordEl.classList.add('error');
+          return;
+        }
+
+        // Store token
+        localStorage.setItem('lp_token', data.token);
+        localStorage.setItem('lp_user', JSON.stringify(data.user));
+
+        // Show success then redirect
+        loginForm.style.display = 'none';
+        successOverlay.classList.add('visible');
+        setTimeout(() => { window.location.href = 'index.html'; }, 1600);
+
+      } catch (err) {
+        showError('sem conexão com o servidor. verifique se o backend está rodando.');
+      } finally {
+        btnSubmit.classList.remove('loading');
+        if (!successOverlay.classList.contains('visible')) {
+          btnSubmit.disabled = !isValid();
+        }
+      }
+    });
+
+    // Allow Enter to submit
+    [emailEl, passwordEl].forEach(el => {
+      el.addEventListener('keydown', e => {
+        if (e.key === 'Enter' && !btnSubmit.disabled) btnSubmit.click();
+      });
+    });
+  </script>
+</body>
+</html>

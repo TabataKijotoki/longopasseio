@@ -1,8 +1,9 @@
 // ExplorarScreen — lista de cafés com filtros (sem mapa)
-function ExplorarScreen({ onOpenCafe, favorites, initialBairro, recentVariant = "broto" }) {
+function ExplorarScreen({ onOpenCafe, favorites, initialBairro }) {
   const [activeBairro, setActiveBairro] = React.useState(initialBairro || null);
   const [activeTags, setActiveTags] = React.useState([]);
   const [search, setSearch] = React.useState("");
+  const [showOnlyRecent, setShowOnlyRecent] = React.useState(false);
 
   const bairros = ["Santa Cecília", "Vila Buarque", "Higienópolis", "República", "Barra Funda", "Campos Elíseos"];
   const tags = ["trabalhar", "encontro", "leitura", "especialidade"];
@@ -11,6 +12,7 @@ function ExplorarScreen({ onOpenCafe, favorites, initialBairro, recentVariant = 
     if (activeBairro && c.bairro !== activeBairro) return false;
     if (activeTags.length > 0 && !activeTags.some(t => c.tags.includes(t))) return false;
     if (search && !c.name.toLowerCase().includes(search.toLowerCase())) return false;
+    if (showOnlyRecent && !isRecentlyUpdated(c.updatedAt)) return false;
     return true;
   });
 
@@ -27,7 +29,7 @@ function ExplorarScreen({ onOpenCafe, favorites, initialBairro, recentVariant = 
     "Campos Elíseos": { bg: "#d0c4e8", text: "#5a4a8a" },
   };
 
-  const hasFilters = activeBairro || activeTags.length > 0 || search;
+  const hasFilters = activeBairro || activeTags.length > 0 || search || showOnlyRecent;
 
   return (
     <div style={explorStyles.container}>
@@ -78,6 +80,20 @@ function ExplorarScreen({ onOpenCafe, favorites, initialBairro, recentVariant = 
           })}
         </div>
         <div style={explorStyles.filterRow}>
+          <button
+            onClick={() => setShowOnlyRecent(p => !p)}
+            style={{
+              ...explorStyles.filterChip,
+              background: showOnlyRecent ? "#f5f0e6" : "transparent",
+              color: showOnlyRecent ? "#7a5a20" : "#888",
+              border: `1.5px solid ${showOnlyRecent ? "#e8d8b0" : "#ddd"}`,
+              fontWeight: showOnlyRecent ? 700 : 400,
+              display: "inline-flex", alignItems: "center", gap: 4,
+            }}
+          >
+            <span style={{ color: showOnlyRecent ? "#c8a84a" : "#bbb", fontSize: 12, lineHeight: 1 }}>✦</span>
+            <span>novo</span>
+          </button>
           {tags.map(t => {
             const isActive = activeTags.includes(t);
             return (
@@ -98,7 +114,7 @@ function ExplorarScreen({ onOpenCafe, favorites, initialBairro, recentVariant = 
       {/* Clear filters */}
       {hasFilters && (
         <div style={explorStyles.clearRow}>
-          <button style={explorStyles.clearBtn} onClick={() => { setActiveBairro(null); setActiveTags([]); setSearch(""); }}>
+          <button style={explorStyles.clearBtn} onClick={() => { setActiveBairro(null); setActiveTags([]); setSearch(""); setShowOnlyRecent(false); }}>
             limpar filtros
           </button>
         </div>
@@ -127,7 +143,7 @@ function ExplorarScreen({ onOpenCafe, favorites, initialBairro, recentVariant = 
                 <p style={explorStyles.listCardAddr}>{cafe.address}</p>
                 <div style={explorStyles.listTags}>
                   {isRecentlyUpdated(cafe.updatedAt) && (
-                    <RecentBadge updatedAt={cafe.updatedAt} variant={recentVariant} compact />
+                    <RecentBadge updatedAt={cafe.updatedAt} compact />
                   )}
                   {cafe.tags.map(t => (
                     <span key={t} style={explorStyles.listTag}>{t}</span>

@@ -1,7 +1,7 @@
 const CAFES_DATA = [
   {
     id: 1,
-    updatedAt: { at: "2026-05-02", kind: "novo" },
+    updatedAt: "2026-05-02",
     name: "FFV Café",
     address: "R. Barão de Tatuí, 240",
     bairro: "Santa Cecília",
@@ -16,7 +16,7 @@ const CAFES_DATA = [
   },
   {
     id: 2,
-    updatedAt: { at: "2026-04-28", kind: "novo" },
+    updatedAt: "2026-04-28",
     name: "Zud Café",
     address: "R. Barão de Tatuí, 377",
     bairro: "Santa Cecília",
@@ -46,7 +46,7 @@ const CAFES_DATA = [
   },
   {
     id: 4,
-    updatedAt: { at: "2026-04-30", kind: "horario" },
+    updatedAt: "2026-04-30",
     name: "Aresta Café",
     address: "R. Jaguaribe, 454 A",
     bairro: "Vila Buarque",
@@ -121,7 +121,7 @@ const CAFES_DATA = [
   },
   {
     id: 9,
-    updatedAt: { at: "2026-04-25", kind: "horario" },
+    updatedAt: "2026-04-25",
     name: "Biblioteca Café",
     address: "R. Marques de Itu, 70",
     bairro: "Higienópolis",
@@ -181,7 +181,7 @@ const CAFES_DATA = [
   },
   {
     id: 13,
-    updatedAt: { at: "2026-05-03", kind: "endereco" },
+    updatedAt: "2026-05-03",
     name: "Casa Café",
     address: "R. Aurora, 295",
     bairro: "República",
@@ -211,7 +211,7 @@ const CAFES_DATA = [
   },
   {
     id: 15,
-    updatedAt: { at: "2026-04-26", kind: "geral" },
+    updatedAt: "2026-04-26",
     name: "Coa Café",
     address: "R. Sousa Lima, 305",
     bairro: "Barra Funda",
@@ -271,7 +271,7 @@ const CAFES_DATA = [
   },
   {
     id: 19,
-    updatedAt: { at: "2026-04-29", kind: "horario" },
+    updatedAt: "2026-04-29",
     name: "Livraria & Café Pirineus",
     address: "R. Pirineus, 86",
     bairro: "Campos Elíseos",
