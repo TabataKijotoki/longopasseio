@@ -46,7 +46,8 @@
       "accentColor": "#c8a84a",
       "bgTone": "cream",
       "mapStyle": "ilustrado",
-      "showVibe": true
+      "showVibe": true,
+      "recentVariant": "estrela"
     }/*EDITMODE-END*/;
 
     function BottomNav({ active, onNavigate, favCount }) {
@@ -192,6 +193,7 @@
                 onOpenCafe={setOpenCafe}
                 favorites={favorites}
                 initialBairro={navParams.bairro || null}
+                recentVariant={tweaks.recentVariant}
               />
             )}
             {screen === "roteiros" && <RoteirosScreen onOpenCafe={setOpenCafe} />}
@@ -208,6 +210,7 @@
                 onClose={() => setOpenCafe(null)}
                 onToggleFavorite={toggleFavorite}
                 isFavorite={favorites.includes(openCafe.id)}
+                recentVariant={tweaks.recentVariant}
               />
             )}
           </div>
@@ -260,6 +263,18 @@
                   onChange={v => {
                     setTweaks(p => ({ ...p, showVibe: v }));
                     window.parent.postMessage({ type: "__edit_mode_set_keys", edits: { showVibe: v } }, "*");
+                  }}
+                />
+                <TweakRadio
+                  label="Selo de atualização recente"
+                  value={tweaks.recentVariant}
+                  options={[
+                    { value: "broto", label: "Broto 🌱" },
+                    { value: "estrela", label: "Estrela ✦" },
+                  ]}
+                  onChange={v => {
+                    setTweaks(p => ({ ...p, recentVariant: v }));
+                    window.parent.postMessage({ type: "__edit_mode_set_keys", edits: { recentVariant: v } }, "*");
                   }}
                 />
               </TweakSection>

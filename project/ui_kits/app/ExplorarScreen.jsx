@@ -1,5 +1,5 @@
 // ExplorarScreen — lista de cafés com filtros (sem mapa)
-function ExplorarScreen({ onOpenCafe, favorites, initialBairro }) {
+function ExplorarScreen({ onOpenCafe, favorites, initialBairro, recentVariant = "estrela" }) {
   const [activeBairro, setActiveBairro] = React.useState(initialBairro || null);
   const [activeTags, setActiveTags] = React.useState([]);
   const [search, setSearch] = React.useState("");
@@ -143,7 +143,7 @@ function ExplorarScreen({ onOpenCafe, favorites, initialBairro }) {
                 <p style={explorStyles.listCardAddr}>{cafe.address}</p>
                 <div style={explorStyles.listTags}>
                   {isRecentlyUpdated(cafe.updatedAt) && (
-                    <RecentBadge updatedAt={cafe.updatedAt} compact />
+                    <RecentBadge updatedAt={cafe.updatedAt} variant={recentVariant} compact />
                   )}
                   {cafe.tags.map(t => (
                     <span key={t} style={explorStyles.listTag}>{t}</span>

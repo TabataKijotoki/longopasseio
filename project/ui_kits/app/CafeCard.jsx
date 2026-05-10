@@ -65,7 +65,7 @@ const BAIRRO_COLORS = {
   "Campos Elíseos": { bg: "#ece8f8", text: "#5a4a8a", border: "#d0c4e8" },
 };
 
-function CafeCard({ cafe, onClose, onToggleFavorite, isFavorite }) {
+function CafeCard({ cafe, onClose, onToggleFavorite, isFavorite, recentVariant = "estrela" }) {
   if (!cafe) return null;
   const bc = BAIRRO_COLORS[cafe.bairro] || { bg: "#f5f0e8", text: "#555", border: "#ddd" };
 
@@ -124,7 +124,7 @@ function CafeCard({ cafe, onClose, onToggleFavorite, isFavorite }) {
           <p style={cafeCardStyles.vibe}>"{cafe.vibe}"</p>
           {isRecentlyUpdated(cafe.updatedAt) && (
             <div style={{ margin: "0 0 10px" }}>
-              <RecentDetailPill updatedAt={cafe.updatedAt} />
+              <RecentDetailPill updatedAt={cafe.updatedAt} variant={recentVariant} />
             </div>
           )}
           <p style={cafeCardStyles.description}>{cafe.description}</p>
