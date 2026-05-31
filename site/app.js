@@ -33,7 +33,7 @@ function useFavorites(){
 
 // ───────────────────────── header ─────────────────────────
 function Header({view,onNav,favCount,activeCity,onOpenCity}){
-  const links=[["home","Início"],["explorar","Explorar"],["roteiros","Roteiros"],["favoritos","Favoritos"]];
+  const links=[["home","Início"],["explorar","Explorar"],["roteiros","Roteiros"]];
   return (
     <header className="site-header">
       <div className="wrap">
@@ -62,7 +62,7 @@ function Header({view,onNav,favCount,activeCity,onOpenCity}){
 }
 
 function TabBar({view,onNav,favCount}){
-  const tabs=[["home","Início",HomeIcon],["explorar","Explorar",MapIcon],["roteiros","Roteiros",RouteIcon],["favoritos","Favoritos",HeartIcon]];
+  const tabs=[["home","Início",HomeIcon],["explorar","Explorar",MapIcon],["roteiros","Roteiros",RouteIcon]];
   return (
     <nav className="tabbar">
       {tabs.map(([id,label,Icon])=>(
@@ -389,7 +389,7 @@ function CafeModal({cafe,onClose,onToggle,isFav}){
             :<div style={{width:"100%",height:"100%",background:`linear-gradient(135deg,${c.border},${c.bg})`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:48,opacity:.4}}>☕</div>}
           <div className="grad"></div>
           <button className="close-btn" onClick={onClose} aria-label="fechar">×</button>
-          <button className="fav-btn" style={{color:isFav?"#e05a5a":"rgba(255,255,255,.85)"}} onClick={()=>onToggle(cafe.id)}>{isFav?"♥":"♡"}</button>
+
           <div className="htext">
             <span className="tag" style={{background:c.border+"cc",color:c.fg}}>{cafe.bairro}</span>
             <h2>{cafe.name}</h2>
