@@ -6,15 +6,14 @@ const BAIRRO_COLORS = {
   "Santa Cecília":  { bg:"#c8d8b0", fg:"#4a6a30", tint:"#e8f0dc", border:"#c8d8b0" },
   "Vila Buarque":   { bg:"#f2c4c4", fg:"#8a3a3a", tint:"#fce8e8", border:"#f2c4c4" },
   "Higienópolis":   { bg:"#b8d4c8", fg:"#2a5a48", tint:"#dceee8", border:"#b8d4c8" },
-  "República":      { bg:"#e8d8b0", fg:"#7a5a20", tint:"#f4eddc", border:"#e8d8b0" },
+  "Campos Elísios": { bg:"#d0c4e8", fg:"#5a4a8a", tint:"#ece8f8", border:"#d0c4e8" },
   "Barra Funda":    { bg:"#b8d4b8", fg:"#2a5a30", tint:"#dceedd", border:"#b8d4b8" },
-  "Campos Elíseos": { bg:"#d0c4e8", fg:"#5a4a8a", tint:"#ece8f8", border:"#d0c4e8" },
 };
 const BAIRROS = Object.keys(BAIRRO_COLORS);
 const TAGS = ["trabalhar","encontro","leitura","especialidade"];
 
 const CITIES = [
-  { id:"sp-centro", city:"São Paulo", region:"Centro", pillLabel:"centro", available:true, cafeCount:19 },
+  { id:"sp-centro", city:"São Paulo", region:"Centro", pillLabel:"centro", available:true, cafeCount:24 },
   { id:"rj",        city:"Rio de Janeiro", region:null, pillLabel:"rio",      available:false },
   { id:"bh",        city:"Belo Horizonte", region:null, pillLabel:"bh",       available:false },
   { id:"cwb",       city:"Curitiba",       region:null, pillLabel:"curitiba", available:false },
@@ -120,11 +119,11 @@ function Home({onNav,onOpenCafe}){
             {Object.values(BAIRRO_COLORS).map((b,i)=><div key={i} style={{background:b.bg}}></div>)}
           </div>
           <h1><em>...o mundo além</em><br/>do seu quintal</h1>
-          <p className="lede">cafés que valem a pausa, no centro de São Paulo. 19 endereços curados em 6 bairros — o centro que nem todo mundo vê.</p>
+          <p className="lede">cafés que valem a pausa, no centro de São Paulo. 24 endereços curados em 5 bairros — o centro que nem todo mundo vê.</p>
           <div className="cta-row">
             <button className="btn btn-primary" onClick={()=>onNav("explorar")}>explorar cafés <span>→</span></button>
             <button className="btn btn-ghost" onClick={()=>onNav("roteiros")}>ver roteiros</button>
-            <span className="hero-meta">19 cafés · 6 bairros</span>
+            <span className="hero-meta">24 cafés · 5 bairros</span>
           </div>
         </div>
       </section>
